@@ -3,7 +3,9 @@ package com.harrisonwells.funding.views;
 
 import com.harrisonwells.funding.components.appnav.AppNav;
 import com.harrisonwells.funding.components.appnav.AppNavItem;
-import com.harrisonwells.funding.views.empty.EmptyView;
+import com.harrisonwells.funding.views.announcements.AnnouncementView;
+import com.harrisonwells.funding.views.applications.ApplicationView;
+import com.harrisonwells.funding.views.home.HomeView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -13,7 +15,12 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.vaadin.lineawesome.LineAwesomeIcon;
+
+import java.util.Collection;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -49,12 +56,23 @@ public class MainLayout extends AppLayout {
     }
 
     private AppNav createNavigation() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         // AppNav is not yet an official component.
         // For documentation, visit https://github.com/vaadin/vcf-nav#readme
         AppNav nav = new AppNav();
 
-        nav.addItem(new AppNavItem("Empty", EmptyView.class, LineAwesomeIcon.FILE.create()));
+        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
 
+        for (GrantedAuthority role : roles) {
+            if (role.getAuthority().equals("ROLE_INVESTOR")) {
+                nav.addItem(new AppNavItem("Home", HomeView.class, LineAwesomeIcon.HOME_SOLID.create()));
+                nav.addItem(new AppNavItem("Announcements", AnnouncementView.class, LineAwesomeIcon.NEWSPAPER.create()));
+            }
+            if (role.getAuthority().equals("ROLE_ENTREPRENEUR")){
+                nav.addItem(new AppNavItem("Home", ApplicationView.class, LineAwesomeIcon.HOME_SOLID.create()));
+            }
+        }
         return nav;
     }
 

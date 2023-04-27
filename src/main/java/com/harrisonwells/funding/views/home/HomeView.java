@@ -1,4 +1,4 @@
-package com.harrisonwells.funding.views.empty;
+package com.harrisonwells.funding.views.home;
 
 import com.harrisonwells.funding.views.MainLayout;
 import com.vaadin.flow.component.html.H2;
@@ -9,13 +9,16 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
+import jakarta.annotation.security.PermitAll;
 
-@PageTitle("Empty")
-@Route(value = "empty", layout = MainLayout.class)
+
+@PageTitle("Home")
+@Route(value = "home", layout = MainLayout.class)
 @RouteAlias(value = "", layout = MainLayout.class)
-public class EmptyView extends VerticalLayout {
+@PermitAll
+public class HomeView extends VerticalLayout {
 
-    public EmptyView() {
+    public HomeView() {
         setSpacing(false);
 
         Image img = new Image("images/empty-plant.png", "placeholder plant");
