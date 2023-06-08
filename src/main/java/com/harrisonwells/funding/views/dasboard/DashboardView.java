@@ -1,24 +1,27 @@
-package com.harrisonwells.funding.views.home;
+package com.harrisonwells.funding.views.dasboard;
 
-import com.harrisonwells.funding.security.MyUserDetailsService;
 import com.harrisonwells.funding.views.HomeLayout;
+import com.harrisonwells.funding.views.MainLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
+import jakarta.annotation.security.PermitAll;
 
 
 @PageTitle("Home")
-@Route(value = "home", layout = HomeLayout.class)
-@AnonymousAllowed
-public class HomeView extends VerticalLayout {
+@Route(value = "dashboard", layout = MainLayout.class)
+@RouteAlias(value = "", layout = MainLayout.class)
+@PermitAll
+public class DashboardView extends VerticalLayout {
 
-    public HomeView(MyUserDetailsService myUserDetailsService) {
+    public DashboardView() {
         setSpacing(false);
+
         Image img = new Image("images/empty-plant.png", "placeholder plant");
         img.setWidth("200px");
         add(img);

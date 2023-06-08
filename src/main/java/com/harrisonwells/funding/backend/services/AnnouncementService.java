@@ -2,7 +2,9 @@ package com.harrisonwells.funding.backend.services;
 
 import com.harrisonwells.funding.backend.models.Announcement;
 import com.harrisonwells.funding.backend.repositories.AnnouncementRepository;
+import com.harrisonwells.funding.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
 
@@ -21,6 +23,10 @@ public class AnnouncementService implements CrudListener<Announcement> {
 
     @Override
     public Announcement add(Announcement announcement) {
+        UserDetails userDetails = SecurityUtils.getAuthenticatedUser();
+        if (userDetails != null) {
+            announcement.setInvestor(userDetails.getUsername());
+        }
         return announcementRepository.save(announcement);
     }
 

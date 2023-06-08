@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -33,22 +34,8 @@ public class SecurityConfiguration
     }
 
     @Bean
-    public UserDetailsManager userDetailsService() {
-        UserDetails admin =
-                User.withUsername("admin")
-                        .password("{noop}123")
-                        .roles("ADMIN")
-                        .build();
-        UserDetails entrepreneur =
-                User.withUsername("entrepreneur")
-                        .password("{noop}123")
-                        .roles("ENTREPRENEUR")
-                        .build();
-        UserDetails investor =
-                User.withUsername("investor")
-                        .password("{noop}123")
-                        .roles("INVESTOR")
-                        .build();
-        return new InMemoryUserDetailsManager(admin, entrepreneur, investor);
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
+
 }
