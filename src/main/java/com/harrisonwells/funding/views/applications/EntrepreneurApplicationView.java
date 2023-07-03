@@ -3,8 +3,10 @@ package com.harrisonwells.funding.views.applications;
 
 import com.harrisonwells.funding.backend.models.Announcement;
 import com.harrisonwells.funding.backend.models.ProjectApplication;
+import com.harrisonwells.funding.backend.models.UserEntity;
 import com.harrisonwells.funding.backend.services.AnnouncementService;
 import com.harrisonwells.funding.backend.services.ProjectApplicationService;
+import com.harrisonwells.funding.backend.services.UserService;
 import com.harrisonwells.funding.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -24,12 +26,28 @@ public class EntrepreneurApplicationView extends VerticalLayout {
 
     private final Grid<Announcement> grid;
 
-    public EntrepreneurApplicationView(AnnouncementService announcementService, ProjectApplicationService projectApplicationService) {
+    public EntrepreneurApplicationView(AnnouncementService announcementService, ProjectApplicationService projectApplicationService, UserService userService) {
 
 // Set the header for the actions column
         grid = new Grid<>(Announcement.class);
 
         grid.setColumns("title", "description", "investor", "published");
+
+
+        grid.addComponentColumn(announcement -> {
+            // Create a button component for the cell
+            UserEntity user = userService.findUserByUserName(announcement.getInvestor());
+            Span span = new Span();
+
+            if (user != null) {
+                span.setText(user.getContactNumber());
+            } else {
+                span.setText("-");
+            }
+
+            span.getStyle().set("font-weight", "bold");
+            return span;
+        }).setHeader("Investor Mobile");
 
         Grid.Column<Announcement> actionsColumn = grid.addComponentColumn(announcement -> {
             // Create a button component for the cell
@@ -48,7 +66,7 @@ public class EntrepreneurApplicationView extends VerticalLayout {
                         openModalDialog(announcement, projectApplicationService);
                     });
                     return button;
-                }else {
+                } else {
                     Span span = new Span("NOT ELIGIBLE");
                     span.getStyle().set("font-weight", "bold");
                     span.getStyle().set("color", "blue");
@@ -56,6 +74,7 @@ public class EntrepreneurApplicationView extends VerticalLayout {
                 }
             }
         });
+
         grid.addComponentColumn(announcement -> {
             // Create a button component for the cell
             boolean isFunded = projectApplicationService.isProjectAlreadyFunded(announcement.getId());
@@ -70,6 +89,8 @@ public class EntrepreneurApplicationView extends VerticalLayout {
             }
             return span;
         }).setHeader("Status");
+
+
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS);
         actionsColumn.setHeader("Actions");
 

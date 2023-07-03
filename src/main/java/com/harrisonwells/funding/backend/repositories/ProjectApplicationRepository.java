@@ -14,4 +14,6 @@ public interface ProjectApplicationRepository extends JpaRepository<ProjectAppli
 
     @Query(value = "select * from projectapplication where ANNOUNCEMENT_ID = ?1 AND entrepreneur = ?2", nativeQuery = true)
     Optional<ProjectApplication> findByAnnouncementAndEntrepreneur(Long announcementId, String entrepreneur);
+    @Query(value = "select * from projectapplication where announcement.investor = ?1", nativeQuery = true)
+    List<ProjectApplication> findByInvestor(String investor);
 }

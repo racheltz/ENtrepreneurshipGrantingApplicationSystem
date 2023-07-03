@@ -2,14 +2,8 @@ package com.harrisonwells.funding.backend.services;
 
 import com.harrisonwells.funding.backend.models.ProjectApplication;
 import com.harrisonwells.funding.backend.repositories.ProjectApplicationRepository;
-import com.harrisonwells.funding.components.appnav.AppNavItem;
 import com.harrisonwells.funding.security.MyUserDetailsService;
 import com.harrisonwells.funding.security.SecurityUtils;
-import com.harrisonwells.funding.views.announcements.AnnouncementView;
-import com.harrisonwells.funding.views.applications.EntrepreneurApplicationView;
-import com.harrisonwells.funding.views.applications.FundApplicationView;
-import com.harrisonwells.funding.views.applications.MyApplicationView;
-import com.harrisonwells.funding.views.dasboard.DashboardView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.vaadin.crudui.crud.CrudListener;
-import org.vaadin.lineawesome.LineAwesomeIcon;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +69,14 @@ public class ProjectApplicationService implements CrudListener<ProjectApplicatio
             }
 
             if (isInvestor){
-                return projectApplicationRepository.findAll();
+                List<ProjectApplication> projectApplications = projectApplicationRepository.findAll();
+                List<ProjectApplication> list = new ArrayList<>();
+                for (ProjectApplication projectApplication : projectApplications) {
+                    if (projectApplication.getAnnouncement().getInvestor().equals(userDetails.getUsername())){
+                        list.add(projectApplication);
+                    }
+                }
+                return list;
             }else {
                 return projectApplicationRepository.findByEntrepreneur(userDetails.getUsername());
             }
