@@ -30,22 +30,46 @@ public class EntrepreneurApplicationView extends VerticalLayout {
         grid = new Grid<>(Announcement.class);
 
         grid.setColumns("title", "description", "investor", "published");
+
         Grid.Column<Announcement> actionsColumn = grid.addComponentColumn(announcement -> {
             // Create a button component for the cell
             boolean isApplied = projectApplicationService.isProjectAlreadyApplied(announcement.getId());
+            boolean isFunded = projectApplicationService.isProjectAlreadyFunded(announcement.getId());
+
             if (isApplied) {
                 Span span = new Span("APPLIED");
                 span.getStyle().set("font-weight", "bold");
                 span.getStyle().set("color", "green");
                 return span;
             } else {
-                Button button = new Button("APPLY");
-                button.addClickListener(event -> {
-                    openModalDialog(announcement, projectApplicationService);
-                });
-                return button;
+                if (!isFunded) {
+                    Button button = new Button("APPLY");
+                    button.addClickListener(event -> {
+                        openModalDialog(announcement, projectApplicationService);
+                    });
+                    return button;
+                }else {
+                    Span span = new Span("NOT ELIGIBLE");
+                    span.getStyle().set("font-weight", "bold");
+                    span.getStyle().set("color", "blue");
+                    return span;
+                }
             }
         });
+        grid.addComponentColumn(announcement -> {
+            // Create a button component for the cell
+            boolean isFunded = projectApplicationService.isProjectAlreadyFunded(announcement.getId());
+            Span span;
+            if (isFunded) {
+                span = new Span("FUNDED");
+                span.getStyle().set("font-weight", "bold");
+                span.getStyle().set("color", "green");
+            } else {
+                span = new Span("NOT FUNDED");
+                span.getStyle().set("font-weight", "bold");
+            }
+            return span;
+        }).setHeader("Status");
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS);
         actionsColumn.setHeader("Actions");
 

@@ -22,6 +22,7 @@ public class ProjectApplication {
     private Announcement announcement;
     private String description;
     private String entrepreneur;
+    private Boolean isFunded;
     @CreationTimestamp
     private Timestamp published;
 }

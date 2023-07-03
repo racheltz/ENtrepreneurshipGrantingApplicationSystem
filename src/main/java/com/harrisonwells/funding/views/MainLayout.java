@@ -6,6 +6,7 @@ import com.harrisonwells.funding.components.appnav.AppNavItem;
 import com.harrisonwells.funding.security.SecurityUtils;
 import com.harrisonwells.funding.views.announcements.AnnouncementView;
 import com.harrisonwells.funding.views.applications.EntrepreneurApplicationView;
+import com.harrisonwells.funding.views.applications.FundApplicationView;
 import com.harrisonwells.funding.views.applications.MyApplicationView;
 import com.harrisonwells.funding.views.dasboard.DashboardView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -81,6 +82,7 @@ public class MainLayout extends AppLayout {
             if (role.getAuthority().equals("ROLE_INVESTOR")) {
                 nav.addItem(new AppNavItem("Dashboard", DashboardView.class, LineAwesomeIcon.HOME_SOLID.create()));
                 nav.addItem(new AppNavItem("Manage Announcements", AnnouncementView.class, LineAwesomeIcon.NEWSPAPER.create()));
+                nav.addItem(new AppNavItem("Fund Applications", FundApplicationView.class, LineAwesomeIcon.MONEY_CHECK_SOLID.create()));
             }
             if (role.getAuthority().equals("ROLE_ENTREPRENEUR")) {
                 nav.addItem(new AppNavItem("Dashboard", DashboardView.class, LineAwesomeIcon.HOME_SOLID.create()));
